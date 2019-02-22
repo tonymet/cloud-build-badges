@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"google.golang.org/appengine"
@@ -23,6 +24,11 @@ func handle(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to get status", 404)
 		return
 	}
+	jsonResponse, err := json.Marshal(StatusToShieldJson(latestStatus))
+	if err != nil {
+		http.Error(w, "Unable to encode json", 404)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(latestStatus)
+	w.Write(jsonResponse)
 }
