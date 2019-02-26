@@ -1,4 +1,6 @@
-package main
+package shields
+
+const badgePrefix = "GCP Build | "
 
 type BadgesStruct struct {
 	SchemaVersion int    `json:"schemaVersion"`
@@ -7,12 +9,20 @@ type BadgesStruct struct {
 	Color         string `json:"color"`
 }
 
-func StatusToShieldJson(statusText string) BadgesStruct {
+func (b BadgesStruct) FromStatus(statusText string) BadgesStruct {
+	b.Message = statusText
+	b.Color = shieldColor(statusText)
+	return b
+}
+
+func (b *BadgesStruct) SetLabel(label string) {
+	b.Label = badgePrefix + label
+}
+
+func New() BadgesStruct {
 	return BadgesStruct{
 		SchemaVersion: 1,
-		Label:         "Cloud Builders",
-		Message:       statusText,
-		Color:         shieldColor(statusText),
+		Color:         shieldColor(""),
 	}
 }
 
